@@ -1,0 +1,45 @@
+name: Build Berserk Chess Engine
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo 1: Checkout do código
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Passo 2: Listar estrutura de diretórios para verificar os arquivos
+      - name: Listar estrutura de diretórios
+        run: |
+          ls -la  # Listar todos os arquivos na raiz do repositório
+
+      # Passo 3: Instalar dependências necessárias
+      - name: Set up build environment
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential git unzip  # Instala unzip
+
+      # Passo 4: Descompactar o arquivo (se for ZIP)
+      - name: Descompactar Berserk
+        run: |
+          unzip berserk-13.zip -d berserk-13  # Descompacta o arquivo na pasta berserk-13
+
+      # Passo 5: Listar arquivos dentro de 'berserk-13' para garantir que o Makefile existe
+      - name: Listar arquivos dentro de berserk-13
+        run: |
+          ls -la ./berserk-13  # Vai listar os arquivos dentro da pasta onde o código foi descompactado
+
+      # Passo 6: Compilar o código (após verificar a existência do Makefile)
+      - name: Compile Berserk
+        run: |
+          cd ./berserk-13  # Vai para a pasta onde os arquivos foram descompactados
+          make  # Compila o código com make
